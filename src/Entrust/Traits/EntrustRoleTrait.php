@@ -18,8 +18,8 @@ trait EntrustRoleTrait
     public function cachedPermissions()
     {
         $rolePrimaryKey = $this->primaryKey;
-        $cacheKey = 'entrust_permissions_for_role_'.$this->$rolePrimaryKey;
-        if(Cache::getStore() instanceof TaggableStore) {
+        $cacheKey = 'entrust_permissions_for_role_' . $this->$rolePrimaryKey;
+        if (Cache::getStore() instanceof TaggableStore) {
             return Cache::tags(Config::get('entrust.permission_role_table'))->remember($cacheKey, Config::get('cache.ttl', 60), function () {
                 return $this->perms()->get();
             });
@@ -28,30 +28,30 @@ trait EntrustRoleTrait
     }
     public function save(array $options = [])
     {   //both inserts and updates
-        if(!parent::save($options)){
+        if (!parent::save($options)){
             return false;
         }
-        if(Cache::getStore() instanceof TaggableStore) {
+        if (Cache::getStore() instanceof TaggableStore) {
             Cache::tags(Config::get('entrust.permission_role_table'))->flush();
         }
         return true;
     }
     public function delete(array $options = [])
     {   //soft or hard
-        if(!parent::delete($options)){
+        if (!parent::delete($options)){
             return false;
         }
-        if(Cache::getStore() instanceof TaggableStore) {
+        if (Cache::getStore() instanceof TaggableStore) {
             Cache::tags(Config::get('entrust.permission_role_table'))->flush();
         }
         return true;
     }
     public function restore()
     {   //soft delete undo's
-        if(!parent::restore()){
+        if (!parent::restore()){
             return false;
         }
-        if(Cache::getStore() instanceof TaggableStore) {
+        if (Cache::getStore() instanceof TaggableStore) {
             Cache::tags(Config::get('entrust.permission_role_table'))->flush();
         }
         return true;
@@ -65,7 +65,6 @@ trait EntrustRoleTrait
     public function users()
     {
         return $this->belongsToMany(Config::get('auth.providers.users.model'), Config::get('entrust.role_user_table'),Config::get('entrust.role_foreign_key'),Config::get('entrust.user_foreign_key'));
-       // return $this->belongsToMany(Config::get('auth.model'), Config::get('entrust.role_user_table'));
     }
 
     /**
